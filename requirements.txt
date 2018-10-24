@@ -1,0 +1,8 @@
+click==6.7
+jsonschema==2.6.0
+pyyaml==3.12
+azure-mgmt-resource==0.30.0rc5
+azure-storage==0.32
+haikunator
+jinja2
+ipaddress
