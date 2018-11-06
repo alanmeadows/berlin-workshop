@@ -16,9 +16,9 @@
 
 set -xe
 
-source .utils/generate-passwords.sh
-: ${OSH_INFRA_PATH:="../openstack-helm-infra"}
-: ${OSH_PATH:="./"}
+source utils/generate-passwords.sh
+: ${OSH_INFRA_PATH:="/opt/openstack-helm-infra"}
+: ${OSH_PATH:="/opt/openstack-helm"}
 
 [ -s /tmp/ceph-fs-uuid.txt ] || uuidgen > /tmp/ceph-fs-uuid.txt
 #NOTE(portdirect): to use RBD devices with Ubuntu kernels < 4.5 this
@@ -40,5 +40,5 @@ export OSH_PATH
 manifests="armada-cluster-ingress armada-ceph armada-osh"
 for manifest in $manifests; do
   echo "Rendering $manifest manifest"
-  envsubst < ./tools/deployment/armada/multinode/$manifest.yaml > /tmp/$manifest.yaml
+  envsubst < multinode/$manifest.yaml > /tmp/$manifest.yaml
 done

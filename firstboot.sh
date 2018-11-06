@@ -16,7 +16,7 @@ sudo -H su -c '(cd /opt/openstack-helm; kubectl replace -f ./tools/kubeadm-aio/a
 sudo -H su -c '(cd /opt/openstack-helm; make)' berlin
 sudo -H pip install python-openstackclient python-heatclient
 
-sudo -H su -c 'git clone https://github.com/alanmeadow/berlin-workshop.git /opt/berlin-workshop' berlin
+sudo -H su -c 'git clone https://github.com/alanmeadows/berlin-workshop.git /opt/berlin-workshop' berlin
 sudo -H su -c 'cp -rav /opt/berlin-workshop/armada/* ${HOME}/' berlin
 
 sudo -H mkdir -p /etc/openstack

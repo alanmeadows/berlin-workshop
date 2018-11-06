@@ -222,6 +222,11 @@ data:
           labels:
             release_group: osh-ceph-client
   values:
+    conf:
+      pod:
+        replicas:
+          mds: 1
+          mgr: 1
     endpoints:
       identity:
         namespace: openstack
@@ -295,6 +300,10 @@ data:
           labels:
             release_group: osh-ceph-provisioners
   values:
+    pod:
+      replicas:
+      mds: 1
+      mgr: 1
     endpoints:
       identity:
         namespace: openstack
