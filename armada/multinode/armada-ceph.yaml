@@ -107,8 +107,8 @@ data:
         crush:
           tunables: ${CRUSH_TUNABLES}
         target:
-          # NOTE(portdirect): 5 nodes, with one osd per node
-          osd: 5
+          # NOTE(alanmeadows): 1 node for berlin demo
+          osd: 1
           pg_per_osd: 100
       storage:
         osd:
