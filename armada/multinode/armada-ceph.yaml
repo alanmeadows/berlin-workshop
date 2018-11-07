@@ -129,7 +129,7 @@ data:
               location: /mnt/osd/osd-three
             journal:
               type: directory
-              location: /mnt/sd/journal-three
+              location: /mnt/osd/journal-three
     logging:
       fluentd: true
   source:
@@ -213,6 +213,7 @@ data:
               location: /mnt/osd/osd-three
             journal:
               type: directory
+              location: /mnt/osd/journal-three
     logging:
       fluentd: true
   source:
@@ -307,6 +308,7 @@ data:
               location: /mnt/osd/osd-three
             journal:
               type: directory
+              location: /mnt/osd/journal-three
   source:
     type: local
     location: ${OSH_INFRA_PATH}
@@ -391,6 +393,7 @@ data:
               location: /mnt/osd/osd-three
             journal:
               type: directory
+              location: /mnt/osd/journal-three
   source:
     type: local
     location: ${OSH_INFRA_PATH}
