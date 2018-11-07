@@ -7,6 +7,7 @@ sudo -H chown -R berlin: /opt
 
 sudo -H su -c 'git clone https://git.openstack.org/openstack/openstack-helm-infra /opt/openstack-helm-infra' berlin
 sudo -H su -c '(cd /opt/openstack-helm-infra; git reset --hard master)' berlin # replace with locked in commit for workshop
+sudo -H su -c '(cd /opt/openstack-helm-infra; git fetch git://git.openstack.org/openstack/openstack-helm-infra refs/changes/82/616282/1 && git checkout FETCH_HEAD)' berlin # remove when this is merged
 sudo -H su -c '/opt/openstack-helm-infra/tools/gate/devel/start.sh' berlin
 
 sudo -H su -c 'git clone https://git.openstack.org/openstack/openstack-helm /opt/openstack-helm' berlin
