@@ -108,16 +108,28 @@ data:
           tunables: ${CRUSH_TUNABLES}
         target:
           # NOTE(alanmeadows): 1 node for berlin demo
-          osd: 1
+          osd: 3
           pg_per_osd: 100
       storage:
         osd:
           - data:
               type: directory
-              location: /var/lib/openstack-helm/ceph/osd/osd-one
+              location: /mnt/osd/osd-one
             journal:
               type: directory
-              location: /var/lib/openstack-helm/ceph/osd/journal-one
+              location: /mnt/osd/journal-one
+          - data:
+              type: directory
+              location: /mnt/osd/osd-two
+            journal:
+              type: directory
+              location: /mnt/osd/journal-two
+          - data:
+              type: directory
+              location: /mnt/osd/osd-three
+            journal:
+              type: directory
+              location: /mnt/sd/journal-three
     logging:
       fluentd: true
   source:
@@ -186,10 +198,21 @@ data:
         osd:
           - data:
               type: directory
-              location: /var/lib/openstack-helm/ceph/osd/osd-one
+              location: /mnt/osd/osd-one
             journal:
               type: directory
-              location: /var/lib/openstack-helm/ceph/osd/journal-one
+              location: /mnt/osd/journal-one
+          - data:
+              type: directory
+              location: /mnt/osd/osd-two
+            journal:
+              type: directory
+              location: /mnt/osd/journal-two
+          - data:
+              type: directory
+              location: /mnt/osd/osd-three
+            journal:
+              type: directory
     logging:
       fluentd: true
   source:
@@ -249,26 +272,41 @@ data:
     bootstrap:
       enabled: true
     conf:
+      osd:
+        osd_crush_chooseleaf_type: 0 # needed for same host
       ceph:
         global:
           fsid: ${CEPH_FS_ID}
       rgw_ks:
         enabled: true
       pool:
+        default:
+          crush_rule: same_host
         crush:
           tunables: ${CRUSH_TUNABLES}
         target:
           # NOTE(portdirect): 5 nodes, with one osd per node
-          osd: 5
+          osd: 3
           pg_per_osd: 100
       storage:
         osd:
           - data:
               type: directory
-              location: /var/lib/openstack-helm/ceph/osd/osd-one
+              location: /mnt/osd/osd-one
             journal:
               type: directory
-              location: /var/lib/openstack-helm/ceph/osd/journal-one
+              location: /mnt/osd/journal-one
+          - data:
+              type: directory
+              location: /mnt/osd/osd-two
+            journal:
+              type: directory
+              location: /mnt/osd/journal-two
+          - data:
+              type: directory
+              location: /mnt/osd/osd-three
+            journal:
+              type: directory
   source:
     type: local
     location: ${OSH_INFRA_PATH}
@@ -338,10 +376,21 @@ data:
         osd:
           - data:
               type: directory
-              location: /var/lib/openstack-helm/ceph/osd/osd-one
+              location: /mnt/osd/osd-one
             journal:
               type: directory
-              location: /var/lib/openstack-helm/ceph/osd/journal-one
+              location: /mnt/osd/journal-one
+          - data:
+              type: directory
+              location: /mnt/osd/osd-two
+            journal:
+              type: directory
+              location: /mnt/osd/journal-two
+          - data:
+              type: directory
+              location: /mnt/osd/osd-three
+            journal:
+              type: directory
   source:
     type: local
     location: ${OSH_INFRA_PATH}
