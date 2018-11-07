@@ -12,6 +12,7 @@ sudo -H su -c '/opt/openstack-helm-infra/tools/gate/devel/start.sh' berlin
 sudo -H su -c 'git clone https://git.openstack.org/openstack/openstack-helm /opt/openstack-helm' berlin
 sudo -H su -c '(cd /opt/openstack-helm; git reset --hard master)' berlin # replace with locked in commit for workshop
 sudo -H su -c '(cd /opt/openstack-helm; sudo -H make pull-all-images)' berlin
+sudo -H su -c '(cd /opt/openstack-helm-infra; sudo -H make pull-all-images)' berlin
 sudo -H su -c '(cd /opt/openstack-helm; kubectl replace -f ./tools/kubeadm-aio/assets/opt/rbac/dev.yaml)' berlin
 sudo -H su -c '(cd /opt/openstack-helm; make)' berlin
 sudo -H pip install python-openstackclient python-heatclient
