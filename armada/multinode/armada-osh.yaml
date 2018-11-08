@@ -210,7 +210,7 @@ data:
     labels:
       release_group: osh-rabbitmq
   test:
-    enabled: true
+    enabled: false
   install:
     no_hooks: False
   upgrade:
@@ -262,7 +262,7 @@ data:
     labels:
       release_group: osh-keystone
   test:
-    enabled: true
+    enabled: false
   install:
     no_hooks: False
   upgrade:
@@ -397,7 +397,7 @@ data:
     labels:
       release_group: osh-glance
   test:
-    enabled: true
+    enabled: false
   install:
     no_hooks: False
   upgrade:
@@ -483,7 +483,7 @@ data:
     labels:
       release_group: osh-cinder
   test:
-    enabled: true
+    enabled: false
   install:
     no_hooks: False
   upgrade:
@@ -631,7 +631,7 @@ data:
     labels:
       release_group: osh-nova
   test:
-    enabled: true
+    enabled: false
   install:
     no_hooks: False
   upgrade:
@@ -788,7 +788,7 @@ data:
     labels:
       release_group: osh-neutron
   test:
-    enabled: true
+    enabled: false
   install:
     no_hooks: False
   upgrade:
@@ -916,7 +916,7 @@ data:
     labels:
       release_group: osh-heat
   test:
-    enabled: true
+    enabled: false
   install:
     no_hooks: False
   upgrade:
