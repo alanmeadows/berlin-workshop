@@ -29,7 +29,6 @@ sudo -H pip install python-openstackclient python-heatclient
 
 sudo -H su -c 'git clone https://github.com/alanmeadows/berlin-workshop.git /opt/berlin-workshop' berlin
 sudo -H su -c 'cp -rav /opt/berlin-workshop/armada/* ${HOME}/' berlin
-sudo -H su -c 'cp -rav /opt/openstack-helm/* ${HOME}/' berlin
 sudo -H su -c 'cp -rav /opt/openstack-helm/tools/deployment/developer/common/170-setup-gateway.sh ${HOME}/' berlin
 
 sudo -H mkdir -p /etc/openstack
