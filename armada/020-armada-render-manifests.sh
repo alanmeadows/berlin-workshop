@@ -20,7 +20,7 @@ source utils/generate-passwords.sh
 : ${OSH_INFRA_PATH:="/opt/openstack-helm-infra"}
 : ${OSH_PATH:="/opt/openstack-helm"}
 
-[ -s /tmp/ceph-fs-uuid.txt ] || uuidgen > /tmp/ceph-fs-uuid.txt
+[ -s ${HOME}/ceph-fs-uuid.txt ] || uuidgen > ${HOME}/ceph-fs-uuid.txt
 #NOTE(portdirect): to use RBD devices with Ubuntu kernels < 4.5 this
 # should be set to 'hammer'
 . /etc/os-release
@@ -32,7 +32,7 @@ else
 fi
 
 export CEPH_NETWORK=$(./utils/kube-node-subnet.sh)
-export CEPH_FS_ID="$(cat /tmp/ceph-fs-uuid.txt)"
+export CEPH_FS_ID="$(cat ${HOME}/ceph-fs-uuid.txt)"
 export TUNNEL_DEVICE=$(ip -4 route list 0/0 | awk '{ print $5; exit }')
 export OSH_INFRA_PATH
 export OSH_PATH

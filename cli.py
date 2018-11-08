@@ -66,7 +66,7 @@ def main(*, verbose):
     '-l',
     '--location',
     'location',
-    default="westus",
+    default="centralus",
     help="Azure Region")
 @click.option(
     '-f',
@@ -107,7 +107,7 @@ def azure(ctx, nodes, resource_group, location, first_boot_path):
     my_deployment = deployer.Deployer(my_subscription_id, my_resource_group, my_pub_ssh_key_path)
 
     print("Beginning the deployment... \n\n")
-    
+
     # Deploy the template
     my_deployment.deploy(template)
 

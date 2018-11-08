@@ -54,5 +54,5 @@ passwords="BARBICAN_DB_PASSWORD \
 
 for password in $passwords
 do
-  export $password=$(tr -dc A-Za-z0-9 < /dev/urandom 2>/dev/null | head -c 20)
+  export $password="berlin"
 done

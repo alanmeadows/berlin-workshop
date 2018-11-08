@@ -449,19 +449,6 @@ data:
     pod:
       replicas:
         api: 2
-        registry: 2
-    # NOTE(portdirect): glance APIv1 is required for heat in Newton
-    conf:
-      glance:
-        DEFAULT:
-          enable_v1_api: true
-          enable_v2_registry: true
-    manifests:
-      deployment_registry: true
-      ingress_registry: true
-      pdb_registry: true
-      service_ingress_registry: true
-      service_registry: true
   source:
     type: local
     location: ${OSH_PATH}
@@ -545,6 +532,16 @@ data:
         scheduler: 1
         backup: 1
     conf:
+      ceph:
+        pools:
+          backup:
+            replication: 3
+            crush_rule: same_host
+            chunk_size: 8
+          volume:
+            replication: 3
+            crush_rule: same_host
+            chunk_size: 8
       cinder:
         DEFAULT:
           backup_driver: cinder.backup.drivers.swift
@@ -881,11 +878,11 @@ data:
     conf:
       neutron:
         DEFAULT:
-          l3_ha: True
-          min_l3_agents_per_router: 2
-          max_l3_agents_per_router: 5
+          l3_ha: False
+          min_l3_agents_per_router: 1
+          max_l3_agents_per_router: 1
           l3_ha_network_type: vxlan
-          dhcp_agents_per_network: 2
+          dhcp_agents_per_network: 1
       plugins:
         ml2_conf:
           ml2_type_flat:
@@ -989,114 +986,6 @@ data:
   dependencies:
     - helm-toolkit
 ---
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: barbican
-data:
-  chart_name: barbican
-  release: barbican
-  namespace: openstack
-  wait:
-    timeout: 1800
-    labels:
-      release_group: osh-barbican
-  install:
-    no_hooks: False
-  upgrade:
-    no_hooks: False
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: osh-barbican
-        - type: pod
-          labels:
-            release_group: osh-barbican
-            component: test
-  values:
-    endpoints:
-      identity:
-        auth:
-          admin:
-            password: ${KEYSTONE_ADMIN_PASSWORD}
-          barbican:
-            password: ${BARBICAN_USER_PASSWORD}
-      oslo_db:
-        auth:
-          admin:
-            password: ${DB_ADMIN_PASSWORD}
-          barbican:
-            password: ${BARBICAN_DB_PASSWORD}
-      oslo_cache:
-        auth:
-          memcache_secret_key: ${KEYSTONE_AUTHTOKEN_MEMCACHED_SECRET_KEY}
-      oslo_messaging:
-        auth:
-          admin:
-            username: rabbitmq-admin
-            password: ${RABBITMQ_ADMIN_PASSWORD}
-          barbican:
-            username: barbican-rabbitmq-user
-            password: ${BARBICAN_RABBITMQ_USER_PASSWORD}
-    labels:
-      api:
-        node_selector_key: openstack-control-plane
-        node_selector_value: enabled
-      job:
-        node_selector_key: openstack-control-plane
-        node_selector_value: enabled
-    pod:
-      replicas:
-        api: 2
-  source:
-    type: local
-    location: ${OSH_PATH}
-    subpath: barbican
-    reference: master
-  dependencies:
-    - helm-toolkit
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: prometheus-openstack-exporter
-data:
-  chart_name: prometheus-openstack-exporter
-  release: prometheus-openstack-exporter
-  namespace: openstack
-  wait:
-    timeout: 1800
-    labels:
-      release_group: osh-prometheus-openstack-exporter
-  install:
-    no_hooks: False
-  upgrade:
-    no_hooks: False
-    pre:
-      delete:
-        - type: job
-          labels:
-            release_group: osh-prometheus-openstack-exporter
-  values:
-    endpoints:
-      identity:
-        auth:
-          admin:
-            password: ${KEYSTONE_ADMIN_PASSWORD}
-          user:
-            password: ${OPENSTACK_EXPORTER_USER_PASSWORD}
-    labels:
-      node_selector_key: openstack-control-plane
-      node_selector_value: enabled
-  source:
-    type: local
-    location: ${OSH_INFRA_PATH}
-    subpath: prometheus-openstack-exporter
-    reference: master
-  dependencies:
-    - helm-toolkit
----
 schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
@@ -1120,31 +1009,13 @@ data:
 schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
-  name: deploy-mariadb
+  name: deploy-support
 data:
-  description: "Mariadb"
-  sequenced: True
+  description: "Support Services"
+  sequenced: False
   chart_group:
     - mariadb
----
-schema: armada/ChartGroup/v1
-metadata:
-  schema: metadata/Document/v1
-  name: deploy-memcached
-data:
-  description: "Memcached"
-  sequenced: True
-  chart_group:
     - memcached
----
-schema: armada/ChartGroup/v1
-metadata:
-  schema: metadata/Document/v1
-  name: deploy-rabbitmq
-data:
-  description: "Rabbitmq"
-  sequenced: True
-  chart_group:
     - rabbitmq
 ---
 schema: armada/ChartGroup/v1
@@ -1210,26 +1081,6 @@ data:
   chart_group:
     - heat
 ---
-schema: armada/ChartGroup/v1
-metadata:
-  schema: metadata/Document/v1
-  name: openstack-barbican
-data:
-  description: "Deploy barbican"
-  sequenced: True
-  chart_group:
-    - barbican
----
-schema: armada/ChartGroup/v1
-metadata:
-  schema: metadata/Document/v1
-  name: prometheus-openstack-exporter
-data:
-  description: 'Deploy Prometheus OpenStack exporter'
-  sequenced: False
-  chart_group:
-    - prometheus-openstack-exporter
----
 schema: armada/Manifest/v1
 metadata:
   schema: metadata/Document/v1
@@ -1239,14 +1090,10 @@ data:
   chart_groups:
     - openstack-ingress-controller
     - openstack-ceph-config
-    - deploy-mariadb
-    - deploy-memcached
-    - deploy-rabbitmq
+    - deploy-support
     - openstack-keystone
     - openstack-radosgw
     - openstack-glance
     - openstack-cinder
     - openstack-compute-kit
     - openstack-heat
-    - openstack-barbican
-    - prometheus-openstack-exporter
