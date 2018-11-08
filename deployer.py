@@ -56,7 +56,7 @@ class Deployer(object):
 
         return blob_service.make_blob_url(container_name, myblobname, protocol=None, sas_token=None)
 
-    def deploy(self, template, location='westus'):
+    def deploy(self, template, location='centralus'):
         """Deploy the template to a resource group."""
         self.client.resource_groups.create_or_update(
             self.resource_group,

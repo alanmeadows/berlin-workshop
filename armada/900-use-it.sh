@@ -16,7 +16,4 @@
 
 set -xe
 
-
-git clone --depth 1 http://github.com/openstack/airship-armada.git /opt/armada
-pip3 install --user /opt/armada
-sudo make build -C /opt/armada
+cd /opt/openstack-helm; ./tools/deployment/developer/ceph/900-use-it.sh
