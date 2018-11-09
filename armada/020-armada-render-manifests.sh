@@ -37,6 +37,9 @@ export TUNNEL_DEVICE=$(ip -4 route list 0/0 | awk '{ print $5; exit }')
 export OSH_INFRA_PATH
 export OSH_PATH
 
+# collapse all armada-osh manifests
+cat multinode/armada-osh-*.yaml > multinode/armada-osh.yaml
+
 manifests="armada-cluster-ingress armada-ceph armada-osh"
 for manifest in $manifests; do
   echo "Rendering $manifest manifest"
