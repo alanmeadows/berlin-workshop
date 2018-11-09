@@ -1,0 +1,157 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nova
+data:
+  chart_name: nova
+  release: nova
+  namespace: openstack
+  wait:
+    labels:
+      release_group: osh-nova
+  test:
+    enabled: false
+  install:
+    no_hooks: False
+  upgrade:
+    no_hooks: False
+    pre:
+      delete:
+        - type: job
+          labels:
+            application: nova
+            component: db-init
+        - type: job
+          labels:
+            application: nova
+            component: db-sync
+        - type: job
+          labels:
+            application: nova
+            component: ks-user
+        - type: job
+          labels:
+            application: nova
+            component: ks-service
+        - type: job
+          labels:
+            application: nova
+            component: ks-endpoints
+        - type: job
+          labels:
+            application: placement
+            component: ks-user
+        - type: job
+          labels:
+            application: placement
+            component: ks-service
+        - type: job
+          labels:
+            application: placement
+            component: ks-endpoints
+        - type: job
+          labels:
+            application: nova
+            component: cell-setup
+  values:
+    endpoints:
+      identity:
+        name: keystone
+        auth:
+          admin:
+            password: ${KEYSTONE_ADMIN_PASSWORD}
+          nova:
+            password: ${NOVA_USER_PASSWORD}
+          neutron:
+            password: ${NEUTRON_USER_PASSWORD}
+          placement:
+            password: ${NOVA_PLACEMENT_USER_PASSWORD}
+      oslo_db:
+        auth:
+          admin:
+            password: ${DB_ADMIN_PASSWORD}
+          nova:
+            password: ${NOVA_DB_PASSWORD}
+      oslo_db_api:
+        auth:
+          admin:
+            password: ${DB_ADMIN_PASSWORD}
+          nova:
+            password: ${NOVA_DB_PASSWORD}
+      oslo_db_cell0:
+        auth:
+          admin:
+            password: ${DB_ADMIN_PASSWORD}
+          nova:
+            password: ${NOVA_DB_PASSWORD}
+      oslo_cache:
+        auth:
+          memcache_secret_key: ${KEYSTONE_AUTHTOKEN_MEMCACHED_SECRET_KEY}
+      oslo_messaging:
+        auth:
+          admin:
+            username: rabbitmq-admin
+            password: ${RABBITMQ_ADMIN_PASSWORD}
+          nova:
+            username: nova-rabbitmq-user
+            password: ${NOVA_RABBITMQ_USER_PASSWORD}
+    labels:
+      agent:
+        compute:
+          node_selector_key: openstack-compute-node
+          node_selector_value: enabled
+        compute_ironic:
+          node_selector_key: openstack-compute-node
+          node_selector_value: enabled
+      api_metadata:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      conductor:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      consoleauth:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      novncproxy:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      osapi:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      placement:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      scheduler:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      spiceproxy:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      test:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    pod:
+      replicas:
+        api_metadata: 1
+        placement: 2
+        osapi: 2
+        conductor: 2
+        consoleauth: 2
+        scheduler: 2
+        novncproxy: 1
+    conf:
+      nova:
+        libvirt:
+          virt_type: qemu
+          cpu_mode: none
+  source:
+    type: local
+    location: ${OSH_PATH}
+    subpath: nova
+    reference: master
+  dependencies:
+    - helm-toolkit

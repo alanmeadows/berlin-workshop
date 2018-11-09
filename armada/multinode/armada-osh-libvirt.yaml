@@ -1,0 +1,29 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: libvirt
+data:
+  chart_name: libvirt
+  release: libvirt
+  namespace: openstack
+  wait:
+    labels:
+      release_group: osh-libvirt
+  install:
+    no_hooks: False
+  upgrade:
+    no_hooks: False
+  values:
+    labels:
+      agent:
+        libvirt:
+          node_selector_key: openstack-compute-node
+          node_selector_value: enabled
+  source:
+    type: local
+    location: ${OSH_INFRA_PATH}
+    subpath: libvirt
+    reference: master
+  dependencies:
+    - helm-toolkit

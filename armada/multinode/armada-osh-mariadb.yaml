@@ -1,0 +1,45 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: mariadb
+data:
+  chart_name: mariadb
+  release: mariadb
+  namespace: openstack
+  wait:
+    timeout: 1800
+    labels:
+      release_group: osh-mariadb
+  install:
+    no_hooks: False
+  upgrade:
+    no_hooks: False
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: osh-mariadb
+  values:
+    endpoints:
+      oslo_db:
+        auth:
+          admin:
+            password: ${DB_ADMIN_PASSWORD}
+    monitoring:
+      prometheus:
+        enabled: True
+    labels:
+      server:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      prometheus_mysql_exporter:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+  source:
+    type: local
+    location: ${OSH_INFRA_PATH}
+    subpath: mariadb
+    reference: master
+  dependencies:
+    - helm-toolkit

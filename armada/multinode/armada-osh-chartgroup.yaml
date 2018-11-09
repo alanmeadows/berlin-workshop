@@ -1,0 +1,113 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-ingress-controller
+data:
+  description: "OpenStack Ingress Controller"
+  sequenced: False
+  chart_group:
+    - openstack-ingress-controller
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-ceph-config
+data:
+  description: "OpenStack Ceph Config"
+  sequenced: True
+  chart_group:
+    - openstack-ceph-config
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: deploy-support
+data:
+  description: "Support Services"
+  sequenced: False
+  chart_group:
+    - mariadb
+    - memcached
+    - rabbitmq
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-keystone
+data:
+  description: "Deploy keystone"
+  sequenced: True
+  chart_group:
+    - keystone
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-glance
+data:
+  description: "Deploy glance"
+  sequenced: True
+  chart_group:
+    - glance
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-radosgw
+data:
+  description: "Deploy rados gateway"
+  sequenced: False
+  chart_group:
+    - radosgw-openstack
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-cinder
+data:
+  description: "Deploy cinder"
+  sequenced: True
+  chart_group:
+    - cinder
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-compute-kit
+data:
+  description: "Deploy nova and neutron, as well as supporting services"
+  sequenced: False
+  chart_group:
+    - libvirt
+    - openvswitch
+    - nova
+    - neutron
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-heat
+data:
+  description: "Deploy heat"
+  sequenced: True
+  chart_group:
+    - heat
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-all-in-one
+data:
+  description: "Deploy all OpenStack services Except Heat"
+  sequenced: False
+  chart_group:
+    - keystone
+    - glance
+    - radosgw-openstack
+    - cinder
+    - libvirt
+    - openvswitch
+    - nova
+    - neutron
+---

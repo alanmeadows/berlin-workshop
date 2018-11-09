@@ -1,0 +1,40 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: memcached
+data:
+  chart_name: memcached
+  release: memcached
+  namespace: openstack
+  wait:
+    timeout: 1800
+    labels:
+      release_group: osh-memcached
+  install:
+    no_hooks: False
+  upgrade:
+    no_hooks: False
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: osh-memcached
+  values:
+    labels:
+      server:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      prometheus_memcached_exporter:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    monitoring:
+      prometheus:
+        enabled: true
+  source:
+    type: local
+    location: ${OSH_INFRA_PATH}
+    subpath: memcached
+    reference: master
+  dependencies:
+    - helm-toolkit

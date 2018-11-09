@@ -1,0 +1,127 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: neutron
+data:
+  chart_name: neutron
+  release: neutron
+  namespace: openstack
+  wait:
+    labels:
+      release_group: osh-neutron
+  test:
+    enabled: false
+  install:
+    no_hooks: False
+  upgrade:
+    no_hooks: False
+    pre:
+      delete:
+        - type: job
+          labels:
+            application: neutron
+            component: db-init
+        - type: job
+          labels:
+            application: neutron
+            component: db-sync
+        - type: job
+          labels:
+            application: neutron
+            component: ks-user
+        - type: job
+          labels:
+            application: neutron
+            component: ks-service
+        - type: job
+          labels:
+            application: neutron
+            component: ks-endpoints
+  values:
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: ${KEYSTONE_ADMIN_PASSWORD}
+          neutron:
+            password: ${NEUTRON_USER_PASSWORD}
+          nova:
+            password: ${NOVA_USER_PASSWORD}
+      oslo_db:
+        auth:
+          admin:
+            password: ${DB_ADMIN_PASSWORD}
+          neutron:
+            password: ${NEUTRON_DB_PASSWORD}
+      oslo_cache:
+        auth:
+          memcache_secret_key: ${KEYSTONE_AUTHTOKEN_MEMCACHED_SECRET_KEY}
+      oslo_messaging:
+        auth:
+          admin:
+            username: rabbitmq-admin
+            password: ${RABBITMQ_ADMIN_PASSWORD}
+          neutron:
+            username: neutron-rabbitmq-user
+            password: ${NEUTRON_RABBITMQ_USER_PASSWORD}
+    pod:
+      replicas:
+        server: 2
+    labels:
+      agent:
+        dhcp:
+          node_selector_key: openstack-control-plane
+          node_selector_value: enabled
+        l3:
+          node_selector_key: openstack-control-plane
+          node_selector_value: enabled
+        metadata:
+          node_selector_key: openstack-control-plane
+          node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      lb:
+        node_selector_key: linuxbridge
+        node_selector_value: enabled
+      # ovs is a special case, requiring a special
+      # label that can apply to both control hosts
+      # and compute hosts, until we get more sophisticated
+      # with our daemonset scheduling
+      ovs:
+        node_selector_key: openvswitch
+        node_selector_value: enabled
+      server:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      test:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    network:
+      interface:
+        tunnel: ${TUNNEL_DEVICE}
+    conf:
+      neutron:
+        DEFAULT:
+          l3_ha: False
+          min_l3_agents_per_router: 1
+          max_l3_agents_per_router: 1
+          l3_ha_network_type: vxlan
+          dhcp_agents_per_network: 1
+      plugins:
+        ml2_conf:
+          ml2_type_flat:
+            flat_networks: public
+        openvswitch_agent:
+          agent:
+            tunnel_types: vxlan
+          ovs:
+            bridge_mappings: public:br-ex
+  source:
+    type: local
+    location: ${OSH_PATH}
+    subpath: neutron
+    reference: master
+  dependencies:
+    - helm-toolkit

@@ -1,0 +1,86 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: heat
+data:
+  chart_name: heat
+  release: heat
+  namespace: openstack
+  wait:
+    timeout: 1800
+    labels:
+      release_group: osh-heat
+  test:
+    enabled: false
+  install:
+    no_hooks: False
+  upgrade:
+    no_hooks: False
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: osh-heat
+        - type: pod
+          labels:
+            release_group: osh-heat
+            component: test
+  values:
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: ${KEYSTONE_ADMIN_PASSWORD}
+          heat:
+            password: ${HEAT_USER_PASSWORD}
+          heat_trustee:
+            password: ${HEAT_TRUSTEE_PASSWORD}
+          heat_stack_user:
+            password: ${HEAT_STACK_PASSWORD}
+      oslo_db:
+        auth:
+          admin:
+            password: ${DB_ADMIN_PASSWORD}
+          heat:
+            password: ${HEAT_DB_PASSWORD}
+      oslo_cache:
+        hosts:
+          default: heat-memcached
+      oslo_messaging:
+        auth:
+          admin:
+            username: rabbitmq-admin
+            password: ${RABBITMQ_ADMIN_PASSWORD}
+          heat:
+            username: heat-rabbitmq-user
+            password: ${HEAT_RABBITMQ_USER_PASSWORD}
+    labels:
+      api:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      cfn:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      cloudwatch:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      engine:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    pod:
+      replicas:
+        api: 2
+        cfn: 2
+        cloudwatch: 2
+        engine: 2
+  source:
+    type: local
+    location: ${OSH_PATH}
+    subpath: heat
+    reference: master
+  dependencies:
+    - helm-toolkit

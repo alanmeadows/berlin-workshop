@@ -1,0 +1,56 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-ceph-config
+data:
+  chart_name: openstack-ceph-config
+  release: openstack-ceph-config
+  namespace: openstack
+  wait:
+    timeout: 1800
+    labels:
+      release_group: osh-openstack-ceph-config
+  install:
+    no_hooks: False
+  upgrade:
+    no_hooks: False
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: osh-openstack-ceph-config
+  values:
+    labels:
+      jobs:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    endpoints:
+      identity:
+        namespace: openstack
+      object_store:
+        namespace: ceph
+      ceph_mon:
+        namespace: ceph
+    network:
+      public: ${CEPH_NETWORK}
+      cluster: ${CEPH_NETWORK}
+    deployment:
+      storage_secrets: false
+      ceph: false
+      rbd_provisioner: false
+      cephfs_provisioner: false
+      client_secrets: true
+      rgw_keystone_user_and_endpoints: false
+    bootstrap:
+      enabled: false
+    conf:
+      rgw_ks:
+        enabled: true
+  source:
+    type: local
+    location: ${OSH_INFRA_PATH}
+    subpath: ceph-provisioners
+    reference: master
+  dependencies:
+    - helm-toolkit

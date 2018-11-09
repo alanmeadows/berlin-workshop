@@ -1,0 +1,25 @@
+---
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: armada-manifest
+data:
+  release_prefix: osh
+  chart_groups:
+    - openstack-ingress-controller
+    - openstack-ceph-config
+    - deploy-support
+    
+    # we could split out spell out each service individually, allowing armada
+    # to bring them up in an ordered fashion - ensuring success before moving on
+    # - openstack-keystone
+    # - openstack-radosgw
+    # - openstack-glance
+    # - openstack-cinder
+    # - openstack-compute-kit
+    #
+    # or alternatively, create one large chartgroup and let OSH dependency checking sort things out
+    - openstack-all-in-one
+
+    # uncomment this line to deploy heat
+    # - openstack-heat

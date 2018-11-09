@@ -1,0 +1,52 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: rabbitmq
+data:
+  chart_name: rabbitmq
+  release: rabbitmq
+  namespace: openstack
+  wait:
+    timeout: 1800
+    labels:
+      release_group: osh-rabbitmq
+  test:
+    enabled: false
+  install:
+    no_hooks: False
+  upgrade:
+    no_hooks: False
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: osh-rabbitmq
+        - type: pod
+          labels:
+            release_group: osh-rabbitmq
+            component: test
+  values:
+    endpoints:
+      oslo_messaging:
+        auth:
+          user:
+            username: rabbitmq-admin
+            password: ${RABBITMQ_ADMIN_PASSWORD}
+    monitoring:
+      prometheus:
+        enabled: True
+    labels:
+      server:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      prometheus_rabbitmq_exporter:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+  source:
+    type: local
+    location: ${OSH_INFRA_PATH}
+    subpath: rabbitmq
+    reference: master
+  dependencies:
+    - helm-toolkit

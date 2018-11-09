@@ -1,0 +1,41 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-ingress-controller
+data:
+  chart_name: openstack-ingress-controller
+  release: openstack-ingress-controller
+  namespace: openstack
+  wait:
+    timeout: 1800
+    labels:
+      release_group: osh-openstack-ingress-controller
+  install:
+    no_hooks: False
+  upgrade:
+    no_hooks: False
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: osh-openstack-ingress-controller
+  values:
+    labels:
+      server:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      error_server:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    pod:
+      replicas:
+        error_page: 2
+        ingress: 2
+  source:
+    type: local
+    location: ${OSH_INFRA_PATH}
+    subpath: ingress
+    reference: master
+  dependencies:
+    - helm-toolkit

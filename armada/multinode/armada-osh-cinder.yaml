@@ -1,0 +1,130 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: cinder
+data:
+  chart_name: cinder
+  release: cinder
+  namespace: openstack
+  wait:
+    timeout: 1800
+    labels:
+      release_group: osh-cinder
+  test:
+    enabled: false
+  install:
+    no_hooks: False
+  upgrade:
+    no_hooks: False
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: osh-cinder
+        - type: pod
+          labels:
+            release_group: osh-cinder
+            component: test
+  values:
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: ${KEYSTONE_ADMIN_PASSWORD}
+          cinder:
+            password: ${CINDER_USER_PASSWORD}
+      oslo_db:
+        auth:
+          admin:
+            password: ${DB_ADMIN_PASSWORD}
+          cinder:
+            password: ${CINDER_DB_PASSWORD}
+      oslo_cache:
+        auth:
+          memcache_secret_key: ${KEYSTONE_AUTHTOKEN_MEMCACHED_SECRET_KEY}
+      oslo_messaging:
+        auth:
+          admin:
+            username: rabbitmq-admin
+            password: ${RABBITMQ_ADMIN_PASSWORD}
+          cinder:
+            username: cinder-rabbitmq-user
+            password: ${CINDER_RABBITMQ_USER_PASSWORD}
+    labels:
+      api:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      backup:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      scheduler:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      volume:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    pod:
+      replicas:
+        api: 2
+        volume: 1
+        scheduler: 1
+        backup: 1
+    conf:
+      ceph:
+        pools:
+          backup:
+            replication: 3
+            crush_rule: same_host
+            chunk_size: 8
+          volume:
+            replication: 3
+            crush_rule: same_host
+            chunk_size: 8
+      cinder:
+        DEFAULT:
+          backup_driver: cinder.backup.drivers.swift
+  source:
+    type: local
+    location: ${OSH_PATH}
+    subpath: cinder
+    reference: master
+  dependencies:
+    - helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openvswitch
+data:
+  chart_name: openvswitch
+  release: openvswitch
+  namespace: openstack
+  wait:
+    timeout: 1800
+    labels:
+      release_group: osh-openvswitch
+  install:
+    no_hooks: False
+  upgrade:
+    no_hooks: False
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: osh-openvswitch
+  values:
+    labels:
+      ovs:
+        node_selector_key: openvswitch
+        node_selector_value: enabled
+  source:
+    type: local
+    location: ${OSH_INFRA_PATH}
+    subpath: openvswitch
+    reference: master
+  dependencies:
+    - helm-toolkit

@@ -1,0 +1,65 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: radosgw-openstack
+data:
+  chart_name: radosgw-openstack
+  release: radosgw-openstack
+  namespace: openstack
+  wait:
+    timeout: 1800
+    labels:
+      release_group: osh-radosgw-openstack
+  install:
+    no_hooks: False
+  upgrade:
+    no_hooks: False
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: osh-radosgw-openstack
+  values:
+    endpoints:
+      identity:
+        namespace: openstack
+        auth:
+          admin:
+            password: ${KEYSTONE_ADMIN_PASSWORD}
+          swift:
+            password: ${SWIFT_USER_PASSWORD}
+          object_store:
+            namespace: openstack
+          ceph_mon:
+            namespace: ceph
+      object_store:
+        namespace: openstack
+      ceph_mon:
+        namespace: ceph
+    labels:
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    bootstrap:
+      enabled: False
+    conf:
+      rgw_ks:
+        enabled: True
+    network:
+      public: ${CEPH_NETWORK}
+      cluster: ${CEPH_NETWORK}
+    deployment:
+      storage_secrets: False
+      ceph: True
+      rbd_provisioner: False
+      cephfs_provisioner: False
+      client_secrets: False
+      rgw_keystone_user_and_endpoints: True
+  source:
+    type: local
+    location: ${OSH_INFRA_PATH}
+    subpath: ceph-rgw
+    reference: master
+  dependencies:
+    - helm-toolkit
