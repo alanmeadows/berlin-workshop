@@ -44,12 +44,12 @@ data:
 schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
-  name: openstack-glance
+  name: openstack-horizon
 data:
-  description: "Deploy glance"
+  description: "Deploy horizon"
   sequenced: True
   chart_group:
-    - glance
+    - horizon
 ---
 schema: armada/ChartGroup/v1
 metadata:
@@ -60,6 +60,16 @@ data:
   sequenced: False
   chart_group:
     - radosgw-openstack
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-glance
+data:
+  description: "Deploy glance"
+  sequenced: True
+  chart_group:
+    - glance
 ---
 schema: armada/ChartGroup/v1
 metadata:
@@ -103,8 +113,9 @@ data:
   sequenced: False
   chart_group:
     - keystone
-    - glance
+    - horizon
     - radosgw-openstack
+    - glance
     - cinder
     - libvirt
     - openvswitch
