@@ -1,0 +1,60 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: horizon
+data:
+  chart_name: horizon
+  release: horizon
+  namespace: openstack
+  wait:
+    timeout: 1800
+    labels:
+      release_group: osh-horizon
+  test:
+    enabled: false
+  install:
+    no_hooks: False
+  upgrade:
+    no_hooks: False
+    pre:
+      delete:
+        - type: job
+          labels:
+            release_group: osh-horizon
+        - type: pod
+          labels:
+            release_group: osh-horizon
+            component: test
+  values:
+    endpoints:
+      oslo_db:
+        auth:
+          admin:
+            password: ${DB_ADMIN_PASSWORD}
+          horizon:
+            password: ${HORIZON_DB_PASSWORD}
+    labels:
+      api:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+      job:
+        node_selector_key: openstack-control-plane
+        node_selector_value: enabled
+    pod:
+      replicas:
+        api: 2
+    network:
+      node_port:
+        enabled: true
+        port: 31000
+    images:
+      tags:
+        horizon: docker.io/openstackhelm/horizon:ocata
+  source:
+    type: local
+    location: ${OSH_PATH}
+    subpath: horizon
+    reference: master
+  dependencies:
+    - helm-toolkit
