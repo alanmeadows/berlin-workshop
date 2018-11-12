@@ -53,4 +53,6 @@ sudo -H su -c 'cd /home/berlin; ./010-armada-host-setup.sh' berlin
 sudo -H su -c 'cd /home/berlin; ./015-armada-build.sh' berlin
 sudo -H su -c 'cd /home/berlin; ./020-armada-render-manifests.sh' berlin
 sudo -H su -c 'cd /home/berlin; ./025-armada-validate-manifests.sh' berlin
+sudo -H su -c 'cd /home/berlin; export MANIFESTS="armada-cluster-ingress" && ./030-armada-apply-manifests.sh' berlin
+sudo -H su -c 'cd /home/berlin; export MANIFESTS="armada-ceph" && ./030-armada-apply-manifests.sh' berlin
 sudo -H su -c 'cd /home/berlin; export MANIFESTS="armada-firstboot" && ./030-armada-apply-manifests.sh' berlin
