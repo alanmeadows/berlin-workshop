@@ -61,6 +61,10 @@ data:
     pod:
       replicas:
         api: 2
+    conf:
+      keystone:
+        DEFAULT:
+          debug: false
   source:
     type: local
     location: ${OSH_PATH}
