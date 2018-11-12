@@ -38,10 +38,14 @@ export OSH_INFRA_PATH
 export OSH_PATH
 
 # collapse all armada-osh manifests
-cat multinode/armada-osh-*.yaml > multinode/armada-osh.yaml
+cat multinode/armada-manifests-osh.yaml multinode/armada-osh-*.yaml > multinode/armada-osh.yaml
+
+# collapse all armada-osh manifests for firstboot
+cat multinode/armada-manifests-osh-firstboot.yaml multinode/armada-osh-*.yaml > multinode/armada-firstboot.yaml
 
 manifests="armada-cluster-ingress armada-ceph armada-osh"
 for manifest in $manifests; do
   echo "Rendering $manifest manifest"
   envsubst < multinode/$manifest.yaml > /tmp/$manifest.yaml
 done
+

@@ -12,14 +12,14 @@ data:
     
     # we could split out spell out each service individually, allowing armada
     # to bring them up in an ordered fashion - ensuring success before moving on
-    # - openstack-keystone
-    # - openstack-radosgw
-    # - openstack-glance
-    # - openstack-cinder
-    # - openstack-compute-kit
-    #
+    - openstack-keystone
+    - openstack-radosgw
+    - openstack-glance
+    - openstack-cinder
+    - openstack-compute-kit
+    
     # or alternatively, create one large chartgroup and let OSH dependency checking sort things out
-    - openstack-all-in-one
+    #- openstack-all-in-one
 
     # uncomment this line to deploy heat
     # - openstack-heat

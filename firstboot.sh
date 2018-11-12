@@ -50,3 +50,7 @@ sudo -H su -c 'echo "export OS_CLOUD=openstack_helm" >> /home/berlin/.bashrc' be
 
 sudo -H su -c 'curl -L -o /home/berlin/important-file.jpg https://imgflip.com/s/meme/Cute-Cat.jpg' berlin
 sudo -H su -c 'cd /home/berlin; ./010-armada-host-setup.sh' berlin
+sudo -H su -c 'cd /home/berlin; ./015-armada-build.sh' berlin
+sudo -H su -c 'cd /home/berlin; ./020-armada-render-manifests.sh' berlin
+sudo -H su -c 'cd /home/berlin; ./025-armada-validate-manifests.sh' berlin
+sudo -H su -c 'cd /home/berlin; export MANIFESTS="armada-firstboot" && ./030-armada-apply-manifests.sh' berlin

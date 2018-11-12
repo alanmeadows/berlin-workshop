@@ -1,0 +1,11 @@
+---
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: armada-manifest-firstboot
+data:
+  release_prefix: osh
+  chart_groups:
+    - openstack-ingress-controller
+    - openstack-ceph-config
+    - deploy-support
