@@ -62,9 +62,9 @@ data:
       replicas:
         api: 2
     conf:
-      keystone:
-        DEFAULT:
-          debug: false
+      logging:
+        logger_keystone:
+          level: INFO
   source:
     type: local
     location: ${OSH_PATH}
@@ -72,4 +72,3 @@ data:
     reference: master
   dependencies:
     - helm-toolkit
-
