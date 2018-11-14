@@ -16,4 +16,5 @@
 
 set -xe
 
-sed -i 's|# - openstack-heat| - openstack-heat|g' multinode/armada-manifests-osh.yaml
+cd /opt/openstack-helm; ./tools/deployment/developer/ceph/170-setup-gateway.sh
+cd /opt/openstack-helm; ./tools/deployment/developer/ceph/900-use-it.sh

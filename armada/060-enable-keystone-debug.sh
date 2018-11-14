@@ -20,4 +20,4 @@ set -xe
 sed -i 's|enabled: false|enabled: true|g' multinode/armada-osh-keystone.yaml
 
 # Enable debug logging
-sed -i 's|debug: false|debug: true|g' multinode/armada-osh-keystone.yaml
+sed -i 's|level: INFO|level: DEBUG|g' multinode/armada-osh-keystone.yaml

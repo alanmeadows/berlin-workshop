@@ -16,4 +16,4 @@
 
 set -xe
 
-cd /opt/openstack-helm; ./tools/deployment/developer/ceph/900-use-it.sh
+sed -i 's|# - openstack-heat|- openstack-heat|g' multinode/armada-manifests-osh.yaml
