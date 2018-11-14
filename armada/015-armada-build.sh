@@ -16,7 +16,9 @@
 
 set -xe
 
-
-git clone --depth 1 http://github.com/openstack/airship-armada.git /opt/armada
+if [ ! -d /opt/armada ];
+then
+  git clone --depth 1 http://github.com/openstack/airship-armada.git /opt/armada
+fi
 pip3 install --user /opt/armada
 sudo make build -C /opt/armada
