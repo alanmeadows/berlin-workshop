@@ -187,6 +187,8 @@ data:
       ceph:
         global:
           fsid: ${CEPH_FS_ID}
+        osd:
+          osd_journal_size: 1024
       rgw_ks:
         enabled: true
       pool:
